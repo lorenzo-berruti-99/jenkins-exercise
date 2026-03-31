@@ -33,19 +33,13 @@ pipeline {
 	}
 	post {
 		always {
-			steps {
-				echo "Always (Declarative Pipeline)"
-			}
+			echo "Always (Declarative Pipeline)"
 		}
 		success {
-			steps {
-				echo "Success (Declarative Pipeline)"
-			}
+			echo "Success (Declarative Pipeline)"
 		}
 		failure {
-			steps {
-				echo "Failure (Declarative Pipeline)"
-			}
+			echo "Failure (Declarative Pipeline)"
 		}
 	}
 }
