@@ -16,24 +16,36 @@ pipeline {
 	agent any
 	stages {
 		stage('Build') {
-			echo "Build (Declarative Pipeline)"
+			steps {
+				echo "Build (Declarative Pipeline)"
+			}
 		}
 		stage('Test') {
-			echo "Test (Declarative Pipeline)"
+			steps {
+				echo "Test (Declarative Pipeline)"
+			}
 		}
 		stage('Deploy') {
-			echo "Deploy"
+			steps {
+				echo "Deploy (Declarative Pipeline)"
+			}
 		}
 	}
 	post {
 		always {
-			echo "Always"
+			steps {
+				echo "Always (Declarative Pipeline)"
+			}
 		}
 		success {
-			echo "Success"
+			steps {
+				echo "Success (Declarative Pipeline)"
+			}
 		}
 		failure {
-			echo "Failure"
+			steps {
+				echo "Failure (Declarative Pipeline)"
+			}
 		}
 	}
 }
