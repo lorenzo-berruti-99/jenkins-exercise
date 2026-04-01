@@ -48,7 +48,13 @@
 // Declarative Pipeline with Docker agent
 pipeline {
     agent none // Non definisco un agente globale
-    stages {
+    environment {
+        // Forza Jenkins a usare i certificati montati nel container
+        DOCKER_TLS_VERIFY = '1'
+        DOCKER_CERT_PATH = '/certs/client'
+        DOCKER_HOST = 'tcp://docker:2376'
+    }
+	stages {
         stage('Test su Node') {
             agent {
                 docker { 
