@@ -12,34 +12,63 @@
 //}
 
 // Declarative Pipeline
+//pipeline {
+//	agent any
+//	stages {
+//		stage('Build') {
+//			steps {
+//				echo "Build (Declarative Pipeline)"
+//			}
+//		}
+//		stage('Test') {
+//			steps {
+//				echo "Test (Declarative Pipeline)"
+//			}
+//		}
+//		stage('Deploy') {
+//			steps {
+//				echo "Deploy (Declarative Pipeline)"
+//			}
+//		}
+//	}
+//	post {
+//		always {
+//			echo "Always (Declarative Pipeline)"
+//		}
+//		success {
+//			echo "Success (Declarative Pipeline)"
+//		}
+//		failure {
+//			echo "Failure (Declarative Pipeline)"
+//		}
+//	}
+//}
+
+
+// Declarative Pipeline with Docker agent
 pipeline {
-	agent any
-	stages {
-		stage('Build') {
-			steps {
-				echo "Build (Declarative Pipeline)"
-			}
-		}
-		stage('Test') {
-			steps {
-				echo "Test (Declarative Pipeline)"
-			}
-		}
-		stage('Deploy') {
-			steps {
-				echo "Deploy (Declarative Pipeline)"
-			}
-		}
-	}
-	post {
-		always {
-			echo "Always (Declarative Pipeline)"
-		}
-		success {
-			echo "Success (Declarative Pipeline)"
-		}
-		failure {
-			echo "Failure (Declarative Pipeline)"
-		}
-	}
+    agent none // Non definisco un agente globale
+    stages {
+        stage('Test su Node') {
+            agent {
+                docker { 
+                    image 'node:18-slim' 
+                    // Jenkins dirà al container dind: 
+                    // "Scarica node:18 e fammi girare questi comandi lì dentro"
+                }
+            }
+            steps {
+                sh 'node --version'
+                sh 'npm install'
+            }
+        }
+        stage('Test su Python') {
+            agent {
+                docker { image 'python:3.10-alpine' }
+            }
+            steps {
+                sh 'python --version'
+            }
+        }
+    }
 }
