@@ -69,7 +69,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://docker.io', 'dockerhub') {
+                    docker.withRegistry('', 'dockerhub') {
                             dockerImage.push()
                     }
                 }
