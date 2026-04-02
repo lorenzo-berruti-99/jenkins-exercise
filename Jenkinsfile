@@ -68,6 +68,7 @@ pipeline {
             script {
                 docker.withRegistry('https://docker.io', 'dockerhub') {
                     dockerImage.push()
+                }
             }
         }
     }
