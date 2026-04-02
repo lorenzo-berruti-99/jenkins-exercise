@@ -60,14 +60,18 @@ pipeline {
     }
 	stages {
         stage('Build Docker Image') {
-            script {
-                dockerImage = docker.build("${env.REPOSITORY}:${env.TAG}")
+            steps {
+                script {
+                    dockerImage = docker.build("${env.REPOSITORY}:${env.TAG}")
+                }
             }
         }
         stage('Push Docker Image') {
-            script {
-                docker.withRegistry('https://docker.io', 'dockerhub') {
-                    dockerImage.push()
+            steps {
+                script {
+                    docker.withRegistry('https://docker.io', 'dockerhub') {
+                            dockerImage.push()
+                    }
                 }
             }
         }
