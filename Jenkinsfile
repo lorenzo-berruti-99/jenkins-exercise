@@ -61,13 +61,29 @@ pipeline {
 	stages {
         stage('Build Docker Image') {
             steps {
+                echo "Building Docker Image ${env.REPOSITORY}:${env.TAG}"
+                
                 script {
                     dockerImage = docker.build("${env.REPOSITORY}:${env.TAG}")
                 }
             }
         }
+        stage('Test Docker Image') {
+            agent {
+                docker {
+                    image "${env.REPOSITORY}:${env.TAG}"
+                }
+            }
+            steps {
+                echo "Testing Docker Image ${env.REPOSITORY}:${env.TAG}"
+                sh "python --version"
+                sh "python main.py"
+            }
+        }
         stage('Push Docker Image') {
             steps {
+                echo "Pushing Docker Image ${env.REPOSITORY}:${env.TAG}"
+
                 script {
                     docker.withRegistry('', 'dockerhub') {
                             dockerImage.push()
