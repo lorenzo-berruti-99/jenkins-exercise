@@ -45,35 +45,29 @@
 //}
 
 
-// Declarative Pipeline with Docker agent
+// Declarative Pipeline that builds a Docker image and pushes it to Docker Hub
 pipeline {
-    agent none // Non definisco un agente globale
+    agent any // Definisco un agente globale
     environment {
         // Forza Jenkins a usare i certificati montati nel container
         DOCKER_TLS_VERIFY = '1'
         DOCKER_CERT_PATH = '/certs/client'
         DOCKER_HOST = 'tcp://docker:2376'
+
+        // Set repository and tag of the image to build
+        REPOSITORY = 'lorenzoberruti/lorenzo'
+        TAG = 'python-jenkins-pipeline'
     }
 	stages {
-        stage('Test su Node') {
-            agent {
-                docker { 
-                    image 'node:18-slim' 
-                    // Jenkins dirà al container dind: 
-                    // "Scarica node:18 e fammi girare questi comandi lì dentro"
-                }
-            }
-            steps {
-                sh 'node --version'
-                sh 'npm install'
+        stage('Build Docker Image') {
+            script {
+                dockerImage = docker.build("${env.REPOSITORY}:${env.TAG}")
             }
         }
-        stage('Test su Python') {
-            agent {
-                docker { image 'python:3.10-alpine' }
-            }
-            steps {
-                sh 'python --version'
+        stage('Push Docker Image') {
+            script {
+                docker.withRegistry('https://docker.io', 'dockerhub') {
+                    dockerImage.push()
             }
         }
     }
